@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/files.css">
+  <link rel="stylesheet" href="css/calendar.css">
   <link rel="stylesheet" href="css/settings.css">
 </head>
 <body class="app-page">
@@ -14,17 +15,20 @@
     <nav class="sidebar" aria-label="App navigation">
       <a class="brand" href="app.html" aria-label="Lumen Chat">
         <span class="brand-icon">L</span>
-        <span class="brand-name">Lumen Chat</span>
       </a>
 
       <ul class="nav-links">
         <li class="nav-item active" data-view="messages" tabindex="0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg>
-          <span>Messages</span>
+          <span>Chats</span>
         </li>
         <li class="nav-item" data-view="contacts" tabindex="0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 11a4 4 0 1 0-8 0"></path><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
           <span>Contacts</span>
+        </li>
+        <li class="nav-item" data-view="calendar" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M3 10h18"></path></svg>
+          <span>Calendar</span>
         </li>
         <li class="nav-item" data-view="files" tabindex="0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg>
@@ -49,9 +53,14 @@
         <div class="chat-layout">
           <aside class="conversation-panel">
             <div class="panel-header">
-              <div>
-                <p class="eyebrow">Workspace</p>
-                <h1>Lumen Chat</h1>
+              <h1>Lumen Chat</h1>
+              <div class="header-actions" aria-label="Chat actions">
+                <button type="button" title="New chat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+                </button>
+                <button type="button" title="Menu">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                </button>
               </div>
               <div class="user-pill" id="current-user-pill">LC</div>
             </div>
@@ -63,7 +72,11 @@
 
             <div class="search-results" id="search-results"></div>
 
-            <h2 class="section-label">Your chats</h2>
+            <div class="chat-tabs" aria-label="Chat filters">
+              <button class="active" type="button">All</button>
+              <button type="button">Unread</button>
+              <button type="button">Groups</button>
+            </div>
             <div class="conversation-list" id="conversation-list"></div>
           </aside>
 
@@ -71,18 +84,18 @@
             <div class="thread-header" id="thread-header">
               <div>
                 <p class="eyebrow">No chat selected</p>
-                <h2>Search to begin</h2>
+                <h2>Lumen Chat</h2>
               </div>
             </div>
 
             <div class="message-feed" id="message-feed">
               <div class="empty-state">
                 <h3>Your account is blank</h3>
-                <p>Use search to find a person. A conversation appears only after you start chatting.</p>
+                  <p>Search for someone to begin. This account has no chats yet.</p>
               </div>
             </div>
 
-            <form class="message-compose" id="message-form">
+            <form class="message-compose is-disabled" id="message-form">
               <input id="message-input" type="text" placeholder="Search and select a person before typing" disabled>
               <button class="btn" type="submit" disabled id="send-button">Send</button>
             </form>
@@ -93,7 +106,6 @@
       <section id="view-contacts" class="view-section hidden">
         <div class="page-header">
           <div>
-            <p class="eyebrow">Directory</p>
             <h1 class="page-title">Contacts</h1>
           </div>
         </div>
@@ -103,7 +115,6 @@
       <section id="view-files" class="view-section hidden">
         <div class="files-header">
           <div>
-            <p class="eyebrow">Shared library</p>
             <h1 class="page-title">Files</h1>
           </div>
           <label class="search-bar" for="file-search-input">
@@ -123,6 +134,31 @@
         </div>
 
         <div class="file-list" id="file-list"></div>
+      </section>
+
+      <section id="view-calendar" class="view-section hidden">
+        <div class="calendar-layout">
+          <header class="calendar-header">
+            <div>
+              <h1 class="page-title" id="calendar-title">Calendar</h1>
+              <p>No events are added to this account yet.</p>
+            </div>
+            <div class="calendar-actions">
+              <button type="button" id="calendar-prev" aria-label="Previous month">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+              </button>
+              <button type="button" id="calendar-next" aria-label="Next month">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg>
+              </button>
+            </div>
+          </header>
+
+          <div class="calendar-grid" id="calendar-grid" aria-label="Monthly calendar"></div>
+          <aside class="calendar-empty" id="calendar-empty">
+            <h2>No events yet</h2>
+            <p>Calendar items will appear here after you create or receive them.</p>
+          </aside>
+        </div>
       </section>
 
       <section id="view-settings" class="view-section hidden">

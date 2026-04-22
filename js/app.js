@@ -10,26 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 'dev', name: 'Dev Patel', role: 'Operations', initials: 'DP' }
   ];
 
-  const files = [
-    { name: 'Launch_Brief.pdf', type: 'pdf', owner: 'Maya Shah', space: 'Planning', size: '1.2 MB', time: 'Today' },
-    { name: 'Sprint_Notes.docx', type: 'doc', owner: 'Arjun Mehta', space: 'Engineering', size: '460 KB', time: 'Today' },
-    { name: 'Brand_Moodboard.png', type: 'image', owner: 'Maya Shah', space: 'Design', size: '3.8 MB', time: 'Yesterday' },
-    { name: 'Demo_Walkthrough.mp4', type: 'video', owner: 'Nora Khan', space: 'Product', size: '42 MB', time: 'Yesterday' },
-    { name: 'Assets_Pack.zip', type: 'zip', owner: 'Isha Rao', space: 'Design', size: '18 MB', time: 'Apr 20' },
-    { name: 'Client_Reference.url', type: 'link', owner: 'Dev Patel', space: 'Operations', size: 'Link', time: 'Apr 18' }
-  ];
-
   const sessionEmail = localStorage.getItem(SESSION_KEY);
   const users = readUsers();
 
   if (!sessionEmail || !users[sessionEmail]) {
-    window.location.href = 'login.html';
+    window.location.href = 'dist/index.html';
     return;
   }
 
   let currentUser = users[sessionEmail];
+  currentUser.conversations = currentUser.conversations || {};
+  currentUser.contacts = currentUser.contacts || [];
+  currentUser.files = currentUser.files || [];
+  currentUser.events = currentUser.events || [];
+
   let activeContactId = null;
   let activeFileFilter = 'all';
+  let calendarDate = new Date();
 
   const navItems = document.querySelectorAll('.nav-item[data-view]');
   const viewSections = document.querySelectorAll('.view-section');
@@ -45,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileList = document.getElementById('file-list');
   const fileSearchInput = document.getElementById('file-search-input');
   const fileFilters = document.getElementById('file-filters');
+  const calendarTitle = document.getElementById('calendar-title');
+  const calendarGrid = document.getElementById('calendar-grid');
+  const calendarPrev = document.getElementById('calendar-prev');
+  const calendarNext = document.getElementById('calendar-next');
   const profileForm = document.getElementById('profile-form');
   const profileName = document.getElementById('profile-name');
   const profileEmail = document.getElementById('profile-email');
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderConversations();
   renderContacts();
   renderFiles();
+  renderCalendar();
   renderThread();
 
   navItems.forEach((item) => {
@@ -89,9 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
       createdAt: new Date().toISOString()
     });
 
+    if (!currentUser.contacts.includes(activeContactId)) {
+      currentUser.contacts.push(activeContactId);
+    }
+
     saveCurrentUser();
     messageInput.value = '';
     renderConversations();
+    renderContacts();
     renderThread();
   });
 
@@ -109,6 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFiles();
   });
 
+  calendarPrev.addEventListener('click', () => {
+    calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1);
+    renderCalendar();
+  });
+
+  calendarNext.addEventListener('click', () => {
+    calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
   profileForm.addEventListener('submit', (event) => {
     event.preventDefault();
     currentUser.name = profileName.value.trim() || currentUser.name;
@@ -123,6 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
       logout();
     }
+  });
+
+  threadHeader.addEventListener('click', (event) => {
+    if (!event.target.closest('.mobile-back')) {
+      return;
+    }
+
+    activeContactId = null;
+    renderConversations();
+    renderThread();
   });
 
   function readUsers() {
@@ -150,6 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setView(viewName) {
     navItems.forEach((item) => item.classList.toggle('active', item.dataset.view === viewName));
+    if (viewName !== 'messages') {
+      document.body.classList.remove('has-active-chat');
+    } else if (activeContactId) {
+      document.body.classList.add('has-active-chat');
+    }
+
     viewSections.forEach((section) => {
       const isActive = section.id === `view-${viewName}`;
       section.classList.toggle('hidden', !isActive);
@@ -191,9 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderContacts() {
-    contactsGrid.innerHTML = contacts
-      .map((contact) => contactButton(contact, 'contact-card'))
-      .join('');
+    const savedContacts = contacts.filter((contact) => currentUser.contacts.includes(contact.id));
+
+    if (!savedContacts.length) {
+      contactsGrid.innerHTML = `
+        <div class="empty-state">
+          <h3>No contacts yet</h3>
+          <p>Search from Messages and send a chat. People you message will appear here.</p>
+        </div>
+      `;
+      return;
+    }
+
+    contactsGrid.innerHTML = savedContacts.map((contact) => contactButton(contact, 'contact-card')).join('');
 
     contactsGrid.querySelectorAll('button').forEach((button) => {
       button.addEventListener('click', () => {
@@ -218,7 +261,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function startConversation(contactId) {
     activeContactId = contactId;
     getConversation(contactId);
-    saveCurrentUser();
     searchInput.value = '';
     searchResults.innerHTML = '';
     renderConversations();
@@ -242,7 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderConversations() {
-    const conversations = Object.values(currentUser.conversations || {});
+    const conversations = Object.values(currentUser.conversations || {})
+      .filter((conversation) => conversation.messages.length);
 
     if (!conversations.length) {
       conversationList.innerHTML = '<div class="empty-state"><p>No chats yet.</p></div>';
@@ -251,6 +294,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     conversationList.innerHTML = conversations.map((conversation) => {
       const contact = contacts.find((item) => item.id === conversation.contactId);
+      if (!contact) {
+        return '';
+      }
+
       const lastMessage = conversation.messages.at(-1);
       const preview = lastMessage ? lastMessage.text : 'Ready to start';
       const activeClass = conversation.contactId === activeContactId ? ' active' : '';
@@ -293,12 +340,17 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       messageInput.disabled = true;
       sendButton.disabled = true;
+      messageForm.classList.add('is-disabled');
+      document.body.classList.remove('has-active-chat');
       messageInput.placeholder = 'Search and select a person before typing';
       return;
     }
 
     const conversation = getConversation(activeContactId);
     threadHeader.innerHTML = `
+      <button class="mobile-back" type="button" aria-label="Back to chats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
+      </button>
       <div>
         <p class="eyebrow">${contact.role}</p>
         <h2>${contact.name}</h2>
@@ -308,6 +360,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     messageInput.disabled = false;
     sendButton.disabled = false;
+    messageForm.classList.remove('is-disabled');
+    document.body.classList.add('has-active-chat');
     messageInput.placeholder = `Message ${contact.name}`;
 
     if (!conversation.messages.length) {
@@ -330,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderFiles() {
+    const files = currentUser.files || [];
     const query = fileSearchInput.value.trim().toLowerCase();
     const visibleFiles = files.filter((file) => {
       const matchesFilter = activeFileFilter === 'all' || file.type === activeFileFilter;
@@ -338,7 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!visibleFiles.length) {
-      fileList.innerHTML = '<div class="empty-state"><h3>No files found</h3><p>Try another file type or search term.</p></div>';
+      const emptyTitle = files.length ? 'No files found' : 'No files yet';
+      const emptyText = files.length
+        ? 'Try another file type or search term.'
+        : 'Shared files will appear here after you send or receive them.';
+      fileList.innerHTML = `<div class="empty-state"><h3>${emptyTitle}</h3><p>${emptyText}</p></div>`;
       return;
     }
 
@@ -364,6 +423,48 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
+  function renderCalendar() {
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    const today = new Date();
+    const firstDay = new Date(year, month, 1);
+    const startDate = new Date(year, month, 1 - firstDay.getDay());
+    const monthEvents = currentUser.events || [];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    calendarTitle.textContent = new Intl.DateTimeFormat([], {
+      month: 'long',
+      year: 'numeric'
+    }).format(firstDay);
+
+    const cells = dayNames.map((day) => `<div class="cal-day-name">${day}</div>`);
+
+    for (let index = 0; index < 42; index += 1) {
+      const cellDate = new Date(startDate);
+      cellDate.setDate(startDate.getDate() + index);
+      const isoDate = toIsoDate(cellDate);
+      const eventsForDay = monthEvents.filter((event) => event.date === isoDate);
+      const isCurrentMonth = cellDate.getMonth() === month;
+      const isToday = toIsoDate(cellDate) === toIsoDate(today);
+
+      cells.push(`
+        <div class="cal-day ${isCurrentMonth ? 'is-current' : ''} ${isToday ? 'is-today' : ''}">
+          <span class="cal-number">${cellDate.getDate()}</span>
+          ${eventsForDay.map((event) => `<div class="cal-event-pill">${escapeHtml(event.title)}</div>`).join('')}
+        </div>
+      `);
+    }
+
+    calendarGrid.innerHTML = cells.join('');
+  }
+
+  function toIsoDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   function formatTime(dateString) {
     return new Intl.DateTimeFormat([], {
       hour: 'numeric',
@@ -383,6 +484,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function logout() {
     localStorage.removeItem(SESSION_KEY);
-    window.location.href = 'login.html';
+    window.location.href = 'dist/index.html';
   }
 });

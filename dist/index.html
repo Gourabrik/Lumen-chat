@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Lumen Chat</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins&amp;display=swap'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="wrapper">
+  <form class="login_box" id="auth-form">
+    <div class="login-header">
+      <span>Lumen</span>
+    </div>
+
+    <div class="input_box">
+      <input type="text" id="name" class="input-field">
+      <label for="name" class="label">Name</label>
+      <i class="bx bx-user icon"></i>
+    </div>
+
+    <div class="input_box">
+      <input type="email" id="user" class="input-field" required>
+      <label for="user" class="label">Email</label>
+      <i class="bx bx-envelope icon"></i>
+    </div>
+
+    <div class="input_box">
+      <input type="password" id="pass" class="input-field" required minlength="6">
+      <label for="pass" class="label">Password</label>
+      <i class="bx bx-lock-alt icon"></i>
+    </div>
+
+    <div class="remember-forgot">
+      <div class="remember-me">
+        <input type="checkbox" id="remember">
+        <label for="remember">Remember me</label>
+      </div>
+
+      <div class="forgot">
+        <a href="#">Forgot password?</a>
+      </div>
+    </div>
+
+    <div class="input_box">
+      <input type="submit" class="input-submit" value="Continue">
+    </div>
+
+    <div class="input_box">
+      <button class="google-submit" id="google-login" type="button">
+        <i class="bx bxl-google"></i>
+        Continue with Google
+      </button>
+    </div>
+
+    <div class="register">
+      <span>New accounts start blank. <a href="../index.html">Back home</a></span>
+    </div>
+  </form>
+</div>
+<!-- partial -->
+  <script>
+    const USERS_KEY = 'lumenChatUsers';
+    const SESSION_KEY = 'lumenChatSession';
+
+    const getUsers = () => JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+    const saveUsers = (users) => localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+    const initials = (nameOrEmail) => nameOrEmail
+      .split(/[ @._-]+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0].toUpperCase())
+      .join('') || 'LC';
+
+    const signIn = ({ email, name, provider }) => {
+      const normalizedEmail = email.trim().toLowerCase();
+      const users = getUsers();
+
+      if (!users[normalizedEmail]) {
+        users[normalizedEmail] = {
+          email: normalizedEmail,
+          name: name.trim() || normalizedEmail.split('@')[0],
+          initials: initials(name || normalizedEmail),
+          provider,
+          conversations: {},
+          contacts: [],
+          files: [],
+          events: [],
+          createdAt: new Date().toISOString()
+        };
+        saveUsers(users);
+      }
+
+      localStorage.setItem(SESSION_KEY, normalizedEmail);
+      window.location.href = '../app.html';
+    };
+
+    document.getElementById('auth-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      signIn({
+        email: document.getElementById('user').value,
+        name: document.getElementById('name').value,
+        provider: 'email'
+      });
+    });
+
+    document.getElementById('google-login').addEventListener('click', () => {
+      signIn({
+        email: 'google.user@lumen.local',
+        name: 'Google User',
+        provider: 'google'
+      });
+    });
+  </script>
+</body>
+</html>
