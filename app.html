@@ -65,12 +65,21 @@
               <div class="user-pill" id="current-user-pill">LC</div>
             </div>
 
-            <label class="search-bar chat-search" for="chat-search-input">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
-              <input id="chat-search-input" type="search" placeholder="Search people to start a chat">
-            </label>
+            <div class="code-card">
+              <span>Your code</span>
+              <button id="copy-code-button" type="button">Loading...</button>
+            </div>
+
+            <form class="code-search-form" id="code-search-form">
+              <label class="search-bar chat-search" for="chat-search-input">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+                <input id="chat-search-input" type="search" placeholder="Enter code to send request">
+              </label>
+              <button class="btn code-send-button" type="submit">Send</button>
+            </form>
 
             <div class="search-results" id="search-results"></div>
+            <div class="request-list" id="request-list"></div>
 
             <div class="chat-tabs" aria-label="Chat filters">
               <button class="active" type="button">All</button>
@@ -197,6 +206,6 @@
     </main>
   </div>
 
-  <script src="js/app.js"></script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -162,6 +162,12 @@ a:hover {
   transition: 0.3s;
 }
 
+.input-submit:disabled,
+.google-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
 .input-submit:hover {
   background: var(--second-color);
 }
@@ -192,6 +198,22 @@ a:hover {
 
 .register a {
   font-weight: 500;
+}
+
+.auth-status {
+  min-height: 20px;
+  margin-top: 18px;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.has-config-error .auth-status {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.35);
 }
 
 @media only screen and (max-width: 564px) {

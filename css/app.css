@@ -211,7 +211,73 @@
 }
 
 .chat-search {
-  margin: 0.8rem 1.55rem 0.65rem;
+  margin: 0;
+}
+
+.code-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.9rem 1.55rem 0.65rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  background: #161b22;
+}
+
+.code-card span {
+  color: #8b949e;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.code-card button {
+  border: 0;
+  background: transparent;
+  color: #58a6ff;
+  font-weight: 800;
+}
+
+.code-search-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  margin: 0 1.55rem 0.65rem;
+}
+
+.code-send-button {
+  min-height: 50px;
+  border-radius: 999px;
+}
+
+.section-label {
+  padding: 0.7rem 1.55rem 0.35rem;
+  color: #8b949e;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.request-list {
+  display: grid;
+}
+
+.request-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 72px;
+  padding: 0 1.25rem 0 1.55rem;
+  border-bottom: 1px solid #161b22;
+}
+
+.request-accept {
+  min-height: 36px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
 }
 
 .chat-tabs {
@@ -582,10 +648,22 @@
 
   .chat-search {
     min-height: 58px;
-    margin: 0.55rem 1.35rem 1rem;
     padding: 0 1.2rem;
     border-radius: 28px;
     font-size: 1rem;
+  }
+
+  .code-card {
+    margin: 0.55rem 1.35rem 0.75rem;
+  }
+
+  .code-search-form {
+    grid-template-columns: 1fr;
+    margin: 0 1.35rem 1rem;
+  }
+
+  .code-send-button {
+    width: 100%;
   }
 
   .chat-tabs {
