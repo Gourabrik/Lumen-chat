@@ -1,119 +1,82 @@
-/* Settings View Specific Styles */
-
 .settings-layout {
-  display: flex;
-  height: 100%;
-  gap: 3rem;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 640px);
+  gap: 1.5rem;
 }
 
-.settings-sidebar {
-  width: 200px;
-}
-
-.settings-sidebar h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--text-main);
+.settings-sidebar h1 {
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
 }
 
 .settings-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  display: grid;
+  gap: 0.45rem;
 }
 
 .settings-link {
-  display: flex;
-  align-items: center;
-  padding: 0.8rem 1rem;
+  min-height: 42px;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid transparent;
   border-radius: 8px;
-  cursor: pointer;
-  color: var(--text-main);
-  transition: var(--transition);
-  font-weight: 500;
-}
-
-.settings-link svg {
-  width: 18px;
-  height: 18px;
-  margin-right: 0.8rem;
+  background: transparent;
   color: var(--text-muted);
+  font-weight: 800;
+  text-align: left;
 }
 
-.settings-link.active {
-  background-color: var(--secondary-color);
+.settings-link.active,
+.settings-link:hover {
+  border-color: var(--border-color);
+  background: white;
   color: var(--primary-color);
-}
-
-.settings-link.active svg {
-  color: var(--primary-color);
-}
-
-.settings-content {
-  flex: 1;
-  max-width: 600px;
 }
 
 .settings-section {
-  background-color: var(--surface-color-light);
-  border-radius: var(--border-radius);
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
+  padding: 1.25rem;
   border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: white;
+  box-shadow: var(--shadow-sm);
 }
 
-.settings-section h3 {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
+.settings-section h2 {
+  margin-bottom: 1rem;
 }
 
 .profile-edit {
   display: flex;
-  gap: 2rem;
-}
-
-.profile-avatar-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .profile-avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background-color: var(--secondary-color);
-  object-fit: cover;
+  width: 86px;
+  height: 86px;
+  font-size: 1.5rem;
 }
 
 .profile-form {
+  display: grid;
   flex: 1;
-  display: flex;
-  flex-direction: column;
   gap: 1rem;
 }
 
 .form-field {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 0.4rem;
 }
 
 .form-field label {
+  color: var(--text-muted);
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-main);
+  font-weight: 800;
 }
 
 .form-field input {
-  padding: 0.6rem 0.8rem;
+  min-height: 42px;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-family: inherit;
+  border-radius: 8px;
+  padding: 0 0.8rem;
   outline: none;
 }
 
@@ -121,68 +84,12 @@
   border-color: var(--primary-color);
 }
 
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
+@media (max-width: 760px) {
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
 
-.setting-label {
-  font-weight: 500;
-}
-
-.toggle-switch {
-  position: relative;
-  width: 44px;
-  height: 24px;
-  background-color: var(--border-color);
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.toggle-switch.active {
-  background-color: var(--primary-color);
-}
-
-.toggle-knob {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  transition: var(--transition);
-}
-
-.toggle-switch.active .toggle-knob {
-  transform: translateX(20px);
-}
-
-.color-picker {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.color-option {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.color-option.active svg {
-  display: block;
-}
-
-.color-option svg {
-  display: none;
-  width: 16px;
-  height: 16px;
-  color: white;
+  .profile-edit {
+    flex-direction: column;
+  }
 }
