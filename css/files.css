@@ -1,0 +1,154 @@
+/* Files Gallery Specific Styles */
+
+.files-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.files-header h2 {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--sidebar-bg);
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  width: 300px;
+}
+
+.search-bar svg {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  color: var(--text-main);
+}
+
+.filter-tags {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.filter-tag {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.filter-tag:hover {
+  color: var(--primary-color);
+  background-color: rgba(92, 65, 173, 0.05);
+}
+
+.filter-tag.active {
+  background-color: var(--primary-color);
+  color: var(--text-inverted);
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.file-row:last-child {
+  border-bottom: none;
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+  background-color: var(--primary-color);
+  color: var(--text-inverted);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+}
+
+.file-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.file-details {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  color: var(--text-main);
+}
+
+.file-author {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.file-team {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.file-size {
+  width: 80px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.file-time {
+  width: 100px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.file-actions {
+  display: flex;
+  gap: 1rem;
+  color: var(--primary-color);
+}
+
+.file-actions svg {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.file-actions svg:hover {
+  color: var(--primary-hover);
+}

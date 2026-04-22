@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Color Palette */
+  --bg-color: #f4f2f9; /* Base background, slightly purple tinted light gray */
+  --surface-color-light: #ffffff; /* Card/Container background */
+  --surface-color-accent: #f8f6fb; /* Lighter accent background */
+  
+  --primary-color: #5c41ad; /* Deep purple */
+  --primary-hover: #4e3498;
+  --secondary-color: #e4deff; /* Light purple for active tags */
+  --sidebar-bg: #eae3fa; /* Sidebar background shade */
+  --sidebar-active-bg: #cdc1f0; /* Sidebar active item background */
+  --accent-blue: #4b6bfb;
+
+  --text-main: #333333;
+  --text-muted: #6b6b7b;
+  --text-light: #9a9aab;
+  --text-inverted: #ffffff;
+
+  /* Borders & Shadows */
+  --border-color: #e6e3f0;
+  --shadow-sm: 0 2px 4px rgba(92, 65, 173, 0.05);
+  --shadow-md: 0 4px 12px rgba(92, 65, 173, 0.08);
+
+  /* Shared Properties */
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+  --transition: all 0.25s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Base Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+ul {
+  list-style: none;
+}
+
+/* Utilities */
+.hidden {
+  display: none !important;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--primary-color);
+  color: var(--text-inverted);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--secondary-color);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(92, 65, 173, 0.1);
+}
+
+/* Layout shell for the App */
+#app-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-color);
+}

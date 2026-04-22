@@ -1,0 +1,116 @@
+/* Application Layout specific styles */
+
+.sidebar {
+  width: 100px;
+  background-color: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  height: 100%;
+}
+
+.sidebar-top {
+  margin-bottom: 2rem;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--primary-color);
+}
+
+.brand svg {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.5rem;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.nav-bottom {
+  margin-top: auto;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item:hover {
+  background-color: rgba(92, 65, 173, 0.05);
+  color: var(--primary-color);
+}
+
+.nav-item.active {
+  background-color: var(--primary-color);
+  color: var(--text-inverted);
+  border-radius: 0 16px 16px 0;
+  margin-right: 12px;
+  width: calc(100% - 12px);
+}
+
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 0.4rem;
+}
+
+.nav-item span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-color-light);
+  border-radius: 24px 0 0 24px;
+  margin: 1rem 1rem 1rem 0;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.view-section {
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.view-section.hidden {
+  display: none;
+}
+
+/* Page headers */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  color: var(--text-main);
+}
