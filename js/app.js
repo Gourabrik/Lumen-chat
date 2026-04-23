@@ -68,7 +68,7 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) {
     localStorage.removeItem(SESSION_KEY);
     localStorage.removeItem(SESSION_UID_KEY);
-    window.location.href = "dist/index.html";
+    window.location.href = "login.html";
     return;
   }
 
@@ -109,7 +109,7 @@ searchInput.addEventListener("input", () => {
 });
 
 copyCodeButton.addEventListener("click", async () => {
-  if (!currentProfile?.code) {
+  if (!currentProfile || !currentProfile.code) {
     return;
   }
 
@@ -170,8 +170,12 @@ fileFilters.addEventListener("click", (event) => {
   }
 
   activeFileFilter = button.dataset.filter;
-  fileFilters.querySelectorAll(".filter-tag").forEach((tag) => tag.classList.remove("active"));
-  button.classList.add("active");
+  fileFilters.querySelectorAll(".filter-tag").forEach((tag) => {
+    tag.classList.remove("active", "btn-primary");
+    tag.classList.add("btn-outline-primary");
+  });
+  button.classList.add("active", "btn-primary");
+  button.classList.remove("btn-outline-primary");
   renderFiles();
 });
 
@@ -188,11 +192,10 @@ calendarNext.addEventListener("click", () => {
 profileForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const name = profileName.value.trim() || currentProfile.name;
-  currentProfile = {
-    ...currentProfile,
+  currentProfile = Object.assign({}, currentProfile, {
     name,
     initials: initials(name)
-  };
+  });
   await setDoc(doc(db, "users", currentAuthUser.uid), {
     name: currentProfile.name,
     initials: currentProfile.initials
@@ -231,10 +234,9 @@ function attachRealtimeListeners() {
   onSnapshot(
     query(collection(db, "connectionRequests"), where("receiverUid", "==", currentAuthUser.uid), where("status", "==", "pending")),
     (snapshot) => {
-      requests = snapshot.docs.map((requestDoc) => ({
-        id: requestDoc.id,
-        ...requestDoc.data()
-      }));
+      requests = snapshot.docs.map((requestDoc) => Object.assign({
+        id: requestDoc.id
+      }, requestDoc.data()));
       renderRequests();
     }
   );
@@ -242,10 +244,9 @@ function attachRealtimeListeners() {
   onSnapshot(
     query(collection(db, "conversations"), where("participants", "array-contains", currentAuthUser.uid)),
     (snapshot) => {
-      conversations = snapshot.docs.map((conversationDoc) => ({
-        id: conversationDoc.id,
-        ...conversationDoc.data()
-      })).sort((a, b) => timestampMillis(b.lastMessageAt || b.createdAt) - timestampMillis(a.lastMessageAt || a.createdAt));
+      conversations = snapshot.docs.map((conversationDoc) => Object.assign({
+        id: conversationDoc.id
+      }, conversationDoc.data())).sort((a, b) => timestampMillis(b.lastMessageAt || b.createdAt) - timestampMillis(a.lastMessageAt || a.createdAt));
 
       renderConversations();
       renderContacts();
@@ -386,10 +387,9 @@ function subscribeMessages(conversationId) {
   messageUnsubscribe = onSnapshot(
     query(collection(db, "conversations", conversationId, "messages"), orderBy("createdAt", "asc")),
     (snapshot) => {
-      const messages = snapshot.docs.map((messageDoc) => ({
-        id: messageDoc.id,
-        ...messageDoc.data()
-      }));
+      const messages = snapshot.docs.map((messageDoc) => Object.assign({
+        id: messageDoc.id
+      }, messageDoc.data()));
       renderMessages(messages);
     }
   );
@@ -402,38 +402,52 @@ function renderRequests() {
   }
 
   requestList.innerHTML = `
-    <h2 class="section-label">Requests</h2>
-    ${requests.map((request) => `
-      <div class="request-row">
-        <span class="contact-avatar">${escapeHtml(request.senderInitials || initials(request.senderName || "LC"))}</span>
-        <span class="contact-meta">
-          <strong>${escapeHtml(request.senderName || "Unknown user")}</strong>
-          <span>${escapeHtml(request.senderCode || "")}</span>
-        </span>
-        <button class="btn request-accept" type="button" data-request-id="${request.id}">Accept</button>
-      </div>
-    `).join("")}
+    <div class="mb-2 text-uppercase text-secondary small fw-semibold">Requests</div>
+    <div class="d-grid gap-2">
+      ${requests.map((request) => `
+        <div class="card border-0 bg-body-tertiary">
+          <div class="card-body d-flex align-items-center gap-3">
+            <span class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width:42px;height:42px;">
+              ${escapeHtml(request.senderInitials || initials(request.senderName || "LC"))}
+            </span>
+            <div class="flex-grow-1 min-w-0">
+              <div class="fw-semibold text-truncate">${escapeHtml(request.senderName || "Unknown user")}</div>
+              <small class="text-secondary">${escapeHtml(request.senderCode || "")}</small>
+            </div>
+            <button class="btn btn-primary btn-sm" type="button" data-request-id="${request.id}">Accept</button>
+          </div>
+        </div>
+      `).join("")}
+    </div>
   `;
 }
 
 function renderConversations() {
   if (!conversations.length) {
-    conversationList.innerHTML = '<div class="empty-state"><p>No chats yet.</p></div>';
+    conversationList.innerHTML = `
+      <div class="alert alert-light border text-center mb-0">
+        <p class="mb-0">No chats yet.</p>
+      </div>
+    `;
     return;
   }
 
   conversationList.innerHTML = conversations.map((conversation) => {
     const contact = getConversationContact(conversation);
     const preview = conversation.lastMessage || "Connected. Say hello.";
-    const activeClass = conversation.id === activeConversation?.id ? " active" : "";
+    const isActive = activeConversation ? conversation.id === activeConversation.id : false;
 
     return `
-      <button class="conversation-row${activeClass}" type="button" data-conversation-id="${conversation.id}">
-        <span class="contact-avatar">${escapeHtml(contact.initials)}</span>
-        <span class="contact-meta">
-          <strong>${escapeHtml(contact.name)}</strong>
-          <span>${escapeHtml(preview)}</span>
-        </span>
+      <button class="btn ${isActive ? "btn-primary" : "btn-outline-secondary"} text-start w-100 rounded-4 p-3" type="button" data-conversation-id="${conversation.id}">
+        <div class="d-flex align-items-center gap-3">
+          <span class="rounded-circle ${isActive ? "bg-white text-primary" : "bg-primary text-white"} d-inline-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width:44px;height:44px;">
+            ${escapeHtml(contact.initials)}
+          </span>
+          <span class="flex-grow-1 min-w-0">
+            <span class="d-block fw-semibold text-truncate">${escapeHtml(contact.name)}</span>
+            <small class="${isActive ? "text-white-50" : "text-secondary"} d-block text-truncate">${escapeHtml(preview)}</small>
+          </span>
+        </div>
       </button>
     `;
   }).join("");
@@ -442,9 +456,11 @@ function renderConversations() {
 function renderContacts() {
   if (!conversations.length) {
     contactsGrid.innerHTML = `
-      <div class="empty-state">
-        <h3>No contacts yet</h3>
-        <p>Send a connection request using someone&apos;s code. Accepted users appear here.</p>
+      <div class="col-12">
+        <div class="alert alert-light border text-center mb-0">
+          <h3 class="h5">No contacts yet</h3>
+          <p class="mb-0">Send a connection request using someone's code. Accepted users appear here.</p>
+        </div>
       </div>
     `;
     return;
@@ -454,13 +470,19 @@ function renderContacts() {
     const contact = getConversationContact(conversation);
 
     return `
-      <button class="contact-card" type="button" data-conversation-id="${conversation.id}">
-        <span class="contact-avatar">${escapeHtml(contact.initials)}</span>
-        <span class="contact-meta">
-          <strong>${escapeHtml(contact.name)}</strong>
-          <span>${escapeHtml(contact.code || "")}</span>
-        </span>
-      </button>
+      <div class="col-12 col-md-6 col-xl-4">
+        <button class="btn btn-outline-secondary text-start w-100 h-100 rounded-4 p-3" type="button" data-conversation-id="${conversation.id}">
+          <div class="d-flex align-items-center gap-3">
+            <span class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width:46px;height:46px;">
+              ${escapeHtml(contact.initials)}
+            </span>
+            <span class="min-w-0">
+              <span class="d-block fw-semibold text-truncate">${escapeHtml(contact.name)}</span>
+              <small class="text-secondary">${escapeHtml(contact.code || "")}</small>
+            </span>
+          </div>
+        </button>
+      </div>
     `;
   }).join("");
 
@@ -478,65 +500,75 @@ function renderThread() {
   if (!activeConversation) {
     threadHeader.innerHTML = `
       <div>
-        <p class="eyebrow">No chat selected</p>
-        <h2>Search to begin</h2>
+        <p class="text-uppercase text-secondary small fw-semibold mb-1">No chat selected</p>
+        <h2 class="h4 mb-0">Search to begin</h2>
       </div>
     `;
     messageFeed.innerHTML = `
-      <div class="empty-state">
-        <h3>Your account is blank</h3>
-        <p>Enter a user code, send a request, and chat after they accept.</p>
+      <div class="alert alert-light border text-center py-5 mb-0">
+        <h3 class="h5">Your account is blank</h3>
+        <p class="mb-0 text-secondary">Enter a user code, send a request, and chat after they accept.</p>
       </div>
     `;
     messageInput.disabled = true;
     sendButton.disabled = true;
-    messageForm.classList.add("is-disabled");
-    document.body.classList.remove("has-active-chat");
+    messageForm.classList.add("opacity-50");
     messageInput.placeholder = "Connect with a user before typing";
     return;
   }
 
   const contact = getConversationContact(activeConversation);
   threadHeader.innerHTML = `
-    <button class="mobile-back" type="button" aria-label="Back to chats">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"></path></svg>
-    </button>
-    <div>
-      <p class="eyebrow">${escapeHtml(contact.code || "Connected")}</p>
-      <h2>${escapeHtml(contact.name)}</h2>
+    <div class="d-flex align-items-center justify-content-between gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-outline-secondary rounded-circle mobile-back" type="button" aria-label="Back to chats">←</button>
+        <div>
+          <p class="text-uppercase text-secondary small fw-semibold mb-1">${escapeHtml(contact.code || "Connected")}</p>
+          <h2 class="h4 mb-0">${escapeHtml(contact.name)}</h2>
+        </div>
+      </div>
+      <span class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center fw-bold flex-shrink-0" style="width:46px;height:46px;">
+        ${escapeHtml(contact.initials)}
+      </span>
     </div>
-    <span class="contact-avatar">${escapeHtml(contact.initials)}</span>
   `;
 
   messageInput.disabled = false;
   sendButton.disabled = false;
-  messageForm.classList.remove("is-disabled");
-  document.body.classList.add("has-active-chat");
+  messageForm.classList.remove("opacity-50");
   messageInput.placeholder = `Message ${contact.name}`;
 }
 
 function renderMessages(messages) {
   if (!messages.length) {
     messageFeed.innerHTML = `
-      <div class="empty-state">
-        <h3>No messages yet</h3>
-        <p>This conversation is ready.</p>
+      <div class="alert alert-light border text-center py-5 mb-0">
+        <h3 class="h5">No messages yet</h3>
+        <p class="mb-0 text-secondary">This conversation is ready.</p>
       </div>
     `;
     return;
   }
 
-  messageFeed.innerHTML = messages.map((message) => `
-    <div class="message-bubble ${message.senderUid === currentAuthUser.uid ? "me" : ""}">
-      ${escapeHtml(message.text)}
-      <span class="time">${formatTime(message.createdAt)}</span>
-    </div>
-  `).join("");
+  messageFeed.innerHTML = messages.map((message) => {
+    const isMine = message.senderUid === currentAuthUser.uid;
+
+    return `
+      <div class="d-flex ${isMine ? "justify-content-end" : "justify-content-start"}">
+        <div class="card border-0 shadow-sm ${isMine ? "bg-primary text-white" : "bg-white"}" style="max-width:min(78%, 38rem);">
+          <div class="card-body py-3 px-3">
+            <div>${escapeHtml(message.text)}</div>
+            <div class="small mt-2 ${isMine ? "text-white-50" : "text-secondary"}">${formatTime(message.createdAt)}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
   messageFeed.scrollTop = messageFeed.scrollHeight;
 }
 
 function renderFiles() {
-  const files = currentProfile?.files || [];
+  const files = currentProfile && currentProfile.files ? currentProfile.files : [];
   const queryText = fileSearchInput.value.trim().toLowerCase();
   const visibleFiles = files.filter((file) => {
     const matchesFilter = activeFileFilter === "all" || file.type === activeFileFilter;
@@ -549,26 +581,44 @@ function renderFiles() {
     const emptyText = files.length
       ? "Try another file type or search term."
       : "Shared files will appear here after you send or receive them.";
-    fileList.innerHTML = `<div class="empty-state"><h3>${emptyTitle}</h3><p>${emptyText}</p></div>`;
+    fileList.innerHTML = `
+      <div class="alert alert-light border text-center mb-0">
+        <h3 class="h5">${emptyTitle}</h3>
+        <p class="mb-0 text-secondary">${emptyText}</p>
+      </div>
+    `;
     return;
   }
 
   fileList.innerHTML = visibleFiles.map((file) => `
-    <article class="file-row">
-      <div class="file-icon ${escapeHtml(file.type)}">${escapeHtml(file.type.toUpperCase())}</div>
-      <div class="file-details">
-        <span class="file-name">${escapeHtml(file.name)}</span>
-        <span class="file-author">${escapeHtml(file.owner)}</span>
+    <div class="card border-0 shadow-sm rounded-4">
+      <div class="card-body">
+        <div class="row align-items-center g-3">
+          <div class="col-12 col-md-auto">
+            <span class="badge text-bg-primary px-3 py-2 text-uppercase">${escapeHtml(file.type.toUpperCase())}</span>
+          </div>
+          <div class="col-12 col-md">
+            <div class="fw-semibold">${escapeHtml(file.name)}</div>
+            <div class="text-secondary small">${escapeHtml(file.owner)}</div>
+          </div>
+          <div class="col-6 col-md-auto">
+            <div class="small text-secondary">Space</div>
+            <div>${escapeHtml(file.space)}</div>
+          </div>
+          <div class="col-6 col-md-auto">
+            <div class="small text-secondary">Size</div>
+            <div>${escapeHtml(file.size)}</div>
+          </div>
+          <div class="col-6 col-md-auto">
+            <div class="small text-secondary">Time</div>
+            <div>${escapeHtml(file.time)}</div>
+          </div>
+          <div class="col-6 col-md-auto">
+            <button type="button" class="btn btn-outline-primary w-100" aria-label="Download ${escapeHtml(file.name)}">Download</button>
+          </div>
+        </div>
       </div>
-      <span class="file-team">${escapeHtml(file.space)}</span>
-      <span class="file-size">${escapeHtml(file.size)}</span>
-      <span class="file-time">${escapeHtml(file.time)}</span>
-      <div class="file-actions">
-        <button type="button" aria-label="Download ${escapeHtml(file.name)}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
-        </button>
-      </div>
-    </article>
+    </div>
   `).join("");
 }
 
@@ -578,7 +628,7 @@ function renderCalendar() {
   const today = new Date();
   const firstDay = new Date(year, month, 1);
   const startDate = new Date(year, month, 1 - firstDay.getDay());
-  const monthEvents = currentProfile?.events || [];
+  const monthEvents = currentProfile && currentProfile.events ? currentProfile.events : [];
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   calendarTitle.textContent = new Intl.DateTimeFormat([], {
@@ -586,25 +636,47 @@ function renderCalendar() {
     year: "numeric"
   }).format(firstDay);
 
-  const cells = dayNames.map((day) => `<div class="cal-day-name">${day}</div>`);
+  const weeks = [];
 
-  for (let index = 0; index < 42; index += 1) {
-    const cellDate = new Date(startDate);
-    cellDate.setDate(startDate.getDate() + index);
-    const isoDate = toIsoDate(cellDate);
-    const eventsForDay = monthEvents.filter((event) => event.date === isoDate);
-    const isCurrentMonth = cellDate.getMonth() === month;
-    const isToday = toIsoDate(cellDate) === toIsoDate(today);
+  for (let weekIndex = 0; weekIndex < 6; weekIndex += 1) {
+    const days = [];
 
-    cells.push(`
-      <div class="cal-day ${isCurrentMonth ? "is-current" : ""} ${isToday ? "is-today" : ""}">
-        <span class="cal-number">${cellDate.getDate()}</span>
-        ${eventsForDay.map((event) => `<div class="cal-event-pill">${escapeHtml(event.title)}</div>`).join("")}
-      </div>
-    `);
+    for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
+      const offset = weekIndex * 7 + dayIndex;
+      const cellDate = new Date(startDate);
+      cellDate.setDate(startDate.getDate() + offset);
+      const isoDate = toIsoDate(cellDate);
+      const eventsForDay = monthEvents.filter((event) => event.date === isoDate);
+      const isCurrentMonth = cellDate.getMonth() === month;
+      const isToday = toIsoDate(cellDate) === toIsoDate(today);
+
+      days.push(`
+        <td class="${isCurrentMonth ? "" : "text-secondary bg-light"} ${isToday ? "border-primary border-2" : ""}" style="vertical-align: top; min-width: 120px; height: 110px;">
+          <div class="fw-semibold mb-2">${cellDate.getDate()}</div>
+          <div class="d-grid gap-1">
+            ${eventsForDay.map((event) => `<span class="badge text-bg-primary text-start text-wrap">${escapeHtml(event.title)}</span>`).join("")}
+          </div>
+        </td>
+      `);
+    }
+
+    weeks.push(`<tr>${days.join("")}</tr>`);
   }
 
-  calendarGrid.innerHTML = cells.join("");
+  calendarGrid.innerHTML = `
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle bg-white mb-0">
+        <thead class="table-light">
+          <tr>
+            ${dayNames.map((day) => `<th class="text-center text-uppercase small">${day}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${weeks.join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 function hydrateUserUi() {
@@ -616,23 +688,33 @@ function hydrateUserUi() {
 }
 
 function setView(viewName) {
-  navItems.forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
-  if (viewName !== "messages") {
-    document.body.classList.remove("has-active-chat");
-  } else if (activeConversation) {
-    document.body.classList.add("has-active-chat");
-  }
+  navItems.forEach((item) => {
+    const isActive = item.dataset.view === viewName;
+    item.classList.toggle("active", isActive);
+
+    const button = item.querySelector("button");
+    if (button) {
+      const parentNav = item.closest("nav");
+      if (parentNav && parentNav.classList.contains("bg-dark")) {
+        button.classList.toggle("btn-light", isActive);
+        button.classList.toggle("text-dark", isActive);
+        button.classList.toggle("btn-dark", !isActive);
+      } else {
+        button.classList.toggle("btn-primary", isActive);
+        button.classList.toggle("btn-outline-primary", !isActive);
+      }
+    }
+  });
 
   viewSections.forEach((section) => {
     const isActive = section.id === `view-${viewName}`;
-    section.classList.toggle("hidden", !isActive);
-    section.classList.toggle("active", isActive);
+    section.classList.toggle("d-none", !isActive);
   });
 }
 
 function getConversationContact(conversation) {
   const otherUid = conversation.participants.find((uid) => uid !== currentAuthUser.uid);
-  const contact = conversation.participantInfo?.[otherUid] || {};
+  const contact = conversation.participantInfo && conversation.participantInfo[otherUid] ? conversation.participantInfo[otherUid] : {};
   return {
     uid: otherUid,
     name: contact.name || "Connected user",
@@ -654,11 +736,20 @@ function normalizeCode(value) {
 }
 
 function renderSearchMessage(message) {
-  searchResults.innerHTML = `<div class="empty-state"><p>${escapeHtml(message)}</p></div>`;
+  searchResults.innerHTML = `
+    <div class="alert alert-info mb-0" role="status">
+      ${escapeHtml(message)}
+    </div>
+  `;
 }
 
 function renderFatalState(message) {
-  messageFeed.innerHTML = `<div class="empty-state"><h3>Can&apos;t load chat</h3><p>${escapeHtml(message)}</p></div>`;
+  messageFeed.innerHTML = `
+    <div class="alert alert-danger mb-0">
+      <h3 class="h5">Can't load chat</h3>
+      <p class="mb-0">${escapeHtml(message)}</p>
+    </div>
+  `;
 }
 
 function timestampMillis(value) {
@@ -697,18 +788,27 @@ function initials(value) {
 }
 
 function escapeHtml(value = "") {
-  return String(value).replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[character]));
+  return String(value).replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case "&":
+        return String.fromCharCode(38, 97, 109, 112, 59);
+      case "<":
+        return String.fromCharCode(38, 108, 116, 59);
+      case ">":
+        return String.fromCharCode(38, 103, 116, 59);
+      case '"':
+        return String.fromCharCode(38, 113, 117, 111, 116, 59);
+      case "'":
+        return String.fromCharCode(38, 35, 48, 51, 57, 59);
+      default:
+        return character;
+    }
+  });
 }
 
 async function logout() {
   localStorage.removeItem(SESSION_KEY);
   localStorage.removeItem(SESSION_UID_KEY);
   await signOut(auth);
-  window.location.href = "dist/index.html";
+  window.location.href = "login.html";
 }

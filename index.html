@@ -4,172 +4,219 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lumen Chat — Clean private conversations</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="landing-page">
+<body class="bg-body-tertiary text-dark">
 
-  <header class="l-nav">
-    <a class="l-brand" href="index.html" aria-label="Lumen Chat">
-      <div class="l-brand-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor"/><path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+    <div class="container py-2">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <span class="bg-primary text-white rounded-3 d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;">L</span>
+        <span>Lumen</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <a class="nav-link" href="#features">Features</a>
+          <a class="nav-link" href="login.html">Sign in</a>
+          <a class="btn btn-primary ms-lg-2" href="login.html">Get started free</a>
+        </div>
       </div>
-      <span>Lumen</span>
-    </a>
-    <nav class="l-nav-links" aria-label="Primary navigation">
-      <a href="#features">Features</a>
-      <a href="login.html" class="l-nav-signin">Sign in</a>
-      <a href="login.html" class="l-btn-primary">Get started free</a>
-    </nav>
-    <button class="l-menu-toggle" aria-label="Toggle menu" onclick="this.closest('header').classList.toggle('nav-open')">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
+    </div>
+  </nav>
 
   <main>
-    <section class="l-hero">
-      <div class="l-hero-bg">
-        <div class="l-glow l-glow-1"></div>
-        <div class="l-glow l-glow-2"></div>
-        <div class="l-grid-overlay"></div>
-      </div>
+    <section class="py-5 py-lg-6">
+      <div class="container py-lg-5">
+        <div class="row align-items-center g-4 g-lg-5">
+          <div class="col-lg-6">
+            <span class="badge text-bg-primary-subtle text-primary-emphasis border border-primary-subtle rounded-pill px-3 py-2 mb-3">
+              Now in public beta
+            </span>
 
-      <div class="l-hero-content">
-        <div class="l-badge">
-          <span class="l-badge-dot"></span>
-          Now in public beta
-        </div>
-        <h1 class="l-hero-title">
-          Conversations that<br>
-          <span class="l-gradient-text">actually matter</span>
-        </h1>
-        <p class="l-hero-sub">
-          A focused workspace for private messaging. No noise, no clutter — just clean conversations, shared files, and the people you care about.
-        </p>
-        <div class="l-hero-cta">
-          <a href="login.html" class="l-btn-primary l-btn-lg">
-            Start for free
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="login.html" class="l-btn-ghost l-btn-lg">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-            Continue with Google
-          </a>
-        </div>
-        <p class="l-hero-note">No credit card required · Free forever for personal use</p>
-      </div>
+            <h1 class="display-4 fw-bold lh-sm mb-3">
+              Conversations that
+              <span class="text-primary">actually matter</span>
+            </h1>
 
-      <div class="l-hero-visual">
-        <div class="l-app-preview">
-          <div class="l-preview-bar">
-            <div class="l-preview-dots">
-              <span></span><span></span><span></span>
+            <p class="lead text-secondary mb-4">
+              A focused workspace for private messaging. No noise, no clutter — just clean conversations, shared files, and the people you care about.
+            </p>
+
+            <div class="d-flex flex-column flex-sm-row gap-3 mb-3">
+              <a href="login.html" class="btn btn-primary btn-lg">Start for free</a>
+              <a href="login.html" class="btn btn-outline-secondary btn-lg">Continue with Google</a>
             </div>
-            <div class="l-preview-url">lumen.chat/app</div>
+
+            <p class="text-secondary mb-0">No credit card required · Free forever for personal use</p>
           </div>
-          <div class="l-preview-body">
-            <div class="l-preview-sidebar">
-              <div class="l-ps-brand">
-                <div class="l-ps-icon">L</div>
+
+          <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+              <div class="card-header bg-light border-bottom d-flex align-items-center justify-content-between py-3">
+                <div class="d-flex gap-2">
+                  <span class="bg-danger rounded-circle d-inline-block" style="width:12px;height:12px;"></span>
+                  <span class="bg-warning rounded-circle d-inline-block" style="width:12px;height:12px;"></span>
+                  <span class="bg-success rounded-circle d-inline-block" style="width:12px;height:12px;"></span>
+                </div>
+                <small class="text-secondary">lumen.chat/app</small>
               </div>
-              <div class="l-ps-nav">
-                <div class="l-ps-item active">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
-                </div>
-                <div class="l-ps-item">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                </div>
-                <div class="l-ps-item">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                </div>
-                <div class="l-ps-item">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="l-preview-panel">
-              <div class="l-pp-header">
-                <span class="l-pp-title">Messages</span>
-                <div class="l-pp-search">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                  Search people…
-                </div>
-              </div>
-              <div class="l-pp-list">
-                <div class="l-pp-item active">
-                  <div class="l-pp-avatar" style="background:#6366f1">AJ</div>
-                  <div class="l-pp-info">
-                    <span class="l-pp-name">Alex Johnson</span>
-                    <span class="l-pp-msg">Sounds good, see you then!</span>
-                  </div>
-                  <div class="l-pp-meta">
-                    <span class="l-pp-time">2m</span>
-                    <span class="l-pp-badge">2</span>
-                  </div>
-                </div>
-                <div class="l-pp-item">
-                  <div class="l-pp-avatar" style="background:#0ea5e9">SR</div>
-                  <div class="l-pp-info">
-                    <span class="l-pp-name">Sarah R.</span>
-                    <span class="l-pp-msg">Sent you the design file</span>
-                  </div>
-                  <div class="l-pp-meta">
-                    <span class="l-pp-time">1h</span>
-                  </div>
-                </div>
-                <div class="l-pp-item">
-                  <div class="l-pp-avatar" style="background:#10b981">MK</div>
-                  <div class="l-pp-info">
-                    <span class="l-pp-name">Mike K.</span>
-                    <span class="l-pp-msg">Can we reschedule?</span>
-                  </div>
-                  <div class="l-pp-meta">
-                    <span class="l-pp-time">3h</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="l-preview-thread">
-              <div class="l-pt-header">
-                <div class="l-pt-avatar" style="background:#6366f1">AJ</div>
-                <div>
-                  <div class="l-pt-name">Alex Johnson</div>
-                  <div class="l-pt-status">
-                    <span class="l-online-dot"></span> Online
-                  </div>
-                </div>
-              </div>
-              <div class="l-pt-messages">
-                <div class="l-msg l-msg-in">
-                  <div class="l-msg-bubble">Hey! Are you free tomorrow for a quick call?</div>
-                  <span class="l-msg-time">10:24 AM</span>
-                </div>
-                <div class="l-msg l-msg-out">
-                  <div class="l-msg-bubble">Yeah, afternoon works for me. Around 3pm?</div>
-                  <span class="l-msg-time">10:26 AM</span>
-                </div>
-                <div class="l-msg l-msg-in">
-                  <div class="l-msg-bubble">Sounds good, see you then!</div>
-                  <span class="l-msg-time">10:27 AM</span>
-                </div>
-                <div class="l-msg l-msg-file">
-                  <div class="l-file-chip">
-                    <div class="l-file-icon pdf">PDF</div>
-                    <div class="l-file-info">
-                      <span>Q3_Report.pdf</span>
-                      <span>2.4 MB</span>
+
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <div class="col-3 bg-dark text-white p-3">
+                    <div class="d-flex flex-column align-items-center gap-3">
+                      <span class="bg-primary rounded-3 d-inline-flex align-items-center justify-content-center fw-bold" style="width:44px;height:44px;">L</span>
+                      <button class="btn btn-sm btn-outline-light rounded-circle px-3" type="button">💬</button>
+                      <button class="btn btn-sm btn-outline-light rounded-circle px-3" type="button">👤</button>
+                      <button class="btn btn-sm btn-outline-light rounded-circle px-3" type="button">📅</button>
+                      <button class="btn btn-sm btn-outline-light rounded-circle px-3" type="button">📄</button>
                     </div>
                   </div>
-                  <span class="l-msg-time">10:28 AM</span>
+
+                  <div class="col-4 border-end bg-white">
+                    <div class="p-3 border-bottom">
+                      <div class="fw-semibold mb-2">Messages</div>
+                      <div class="form-control bg-light text-secondary">Search people…</div>
+                    </div>
+
+                    <div class="list-group list-group-flush">
+                      <div class="list-group-item active border-0">
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="rounded-circle bg-light text-primary d-inline-flex align-items-center justify-content-center fw-bold" style="width:38px;height:38px;">AJ</span>
+                          <div class="flex-grow-1">
+                            <div class="fw-semibold">Alex Johnson</div>
+                            <small>Sounds good, see you then!</small>
+                          </div>
+                          <small>2m</small>
+                        </div>
+                      </div>
+
+                      <div class="list-group-item border-0">
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="rounded-circle bg-info text-white d-inline-flex align-items-center justify-content-center fw-bold" style="width:38px;height:38px;">SR</span>
+                          <div class="flex-grow-1">
+                            <div class="fw-semibold">Sarah R.</div>
+                            <small class="text-secondary">Sent you the design file</small>
+                          </div>
+                          <small class="text-secondary">1h</small>
+                        </div>
+                      </div>
+
+                      <div class="list-group-item border-0">
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center fw-bold" style="width:38px;height:38px;">MK</span>
+                          <div class="flex-grow-1">
+                            <div class="fw-semibold">Mike K.</div>
+                            <small class="text-secondary">Can we reschedule?</small>
+                          </div>
+                          <small class="text-secondary">3h</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-5 bg-body-tertiary">
+                    <div class="p-3 border-bottom bg-white d-flex align-items-center gap-2">
+                      <span class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center fw-bold" style="width:40px;height:40px;">AJ</span>
+                      <div>
+                        <div class="fw-semibold">Alex Johnson</div>
+                        <small class="text-success">Online</small>
+                      </div>
+                    </div>
+
+                    <div class="p-3 d-flex flex-column gap-3">
+                      <div>
+                        <div class="bg-white border rounded-4 px-3 py-2 d-inline-block shadow-sm">Hey! Are you free tomorrow for a quick call?</div>
+                        <div><small class="text-secondary">10:24 AM</small></div>
+                      </div>
+
+                      <div class="text-end">
+                        <div class="bg-primary text-white rounded-4 px-3 py-2 d-inline-block shadow-sm">Yeah, afternoon works for me. Around 3pm?</div>
+                        <div><small class="text-secondary">10:26 AM</small></div>
+                      </div>
+
+                      <div>
+                        <div class="bg-white border rounded-4 px-3 py-2 d-inline-block shadow-sm">Sounds good, see you then!</div>
+                        <div><small class="text-secondary">10:27 AM</small></div>
+                      </div>
+
+                      <div>
+                        <div class="bg-white border rounded-4 px-3 py-2 d-inline-flex align-items-center gap-3 shadow-sm">
+                          <span class="badge text-bg-danger">PDF</span>
+                          <span>
+                            <span class="d-block fw-semibold">Q3_Report.pdf</span>
+                            <small class="text-secondary">2.4 MB</small>
+                          </span>
+                        </div>
+                        <div><small class="text-secondary">10:28 AM</small></div>
+                      </div>
+                    </div>
+
+                    <div class="p-3 border-top bg-white">
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Type a message…" aria-label="Type a message">
+                        <button class="btn btn-primary" type="button">Send</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="l-pt-compose">
-                <div class="l-compose-input">Type a message…</div>
-                <button class="l-compose-send">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5 bg-white border-top border-bottom" id="features">
+      <div class="container py-lg-4">
+        <div class="text-center mb-5">
+          <span class="text-uppercase text-secondary fw-semibold small">Why Lumen</span>
+          <h2 class="display-6 fw-bold mt-2">Everything you need, nothing you don't</h2>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6 col-xl-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+              <div class="card-body p-4">
+                <div class="fs-2 mb-3">🔒</div>
+                <h3 class="h5 fw-bold">Private by default</h3>
+                <p class="text-secondary mb-0">End-to-end encrypted conversations. Your messages stay between you and the people you choose.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-xl-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+              <div class="card-body p-4">
+                <div class="fs-2 mb-3">📁</div>
+                <h3 class="h5 fw-bold">Smart file sharing</h3>
+                <p class="text-secondary mb-0">Share any file type. Browse by PDF, image, video, or archive — all organized automatically.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-xl-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+              <div class="card-body p-4">
+                <div class="fs-2 mb-3">📅</div>
+                <h3 class="h5 fw-bold">Built-in calendar</h3>
+                <p class="text-secondary mb-0">Schedule and track events without leaving the app. Stay in sync with your contacts.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-xl-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+              <div class="card-body p-4">
+                <div class="fs-2 mb-3">🔎</div>
+                <h3 class="h5 fw-bold">Search-first design</h3>
+                <p class="text-secondary mb-0">New accounts start blank. Find people through search and start conversations instantly.</p>
               </div>
             </div>
           </div>
@@ -177,67 +224,29 @@
       </div>
     </section>
 
-    <section class="l-features" id="features">
-      <div class="l-features-inner">
-        <div class="l-section-label">Why Lumen</div>
-        <h2 class="l-section-title">Everything you need, nothing you don't</h2>
-        <div class="l-features-grid">
-          <div class="l-feature-card">
-            <div class="l-feature-icon" style="--c:#6366f1">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <h3>Private by default</h3>
-            <p>End-to-end encrypted conversations. Your messages stay between you and the people you choose.</p>
-          </div>
-          <div class="l-feature-card">
-            <div class="l-feature-icon" style="--c:#0ea5e9">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            </div>
-            <h3>Smart file sharing</h3>
-            <p>Share any file type. Browse by PDF, image, video, or archive — all organized automatically.</p>
-          </div>
-          <div class="l-feature-card">
-            <div class="l-feature-icon" style="--c:#10b981">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            </div>
-            <h3>Built-in calendar</h3>
-            <p>Schedule and track events without leaving the app. Stay in sync with your contacts.</p>
-          </div>
-          <div class="l-feature-card">
-            <div class="l-feature-icon" style="--c:#f59e0b">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            </div>
-            <h3>Search-first design</h3>
-            <p>New accounts start blank. Find people through search and start conversations instantly.</p>
+    <section class="py-5">
+      <div class="container py-lg-4">
+        <div class="card border-0 bg-primary text-white rounded-4 shadow-lg">
+          <div class="card-body p-4 p-lg-5 text-center">
+            <h2 class="display-6 fw-bold mb-3">Ready to start chatting?</h2>
+            <p class="lead mb-4">Join thousands of people who use Lumen for focused, private conversations.</p>
+            <a href="login.html" class="btn btn-light btn-lg text-primary fw-semibold">Create your free account</a>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="l-cta-section">
-      <div class="l-cta-glow"></div>
-      <div class="l-cta-inner">
-        <h2>Ready to start chatting?</h2>
-        <p>Join thousands of people who use Lumen for focused, private conversations.</p>
-        <a href="login.html" class="l-btn-primary l-btn-lg">
-          Create your free account
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
       </div>
     </section>
   </main>
 
-  <footer class="l-footer">
-    <div class="l-footer-inner">
-      <a class="l-brand" href="index.html">
-        <div class="l-brand-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor"/><path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
+  <footer class="border-top bg-white">
+    <div class="container py-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <a class="text-decoration-none text-dark fw-bold d-flex align-items-center gap-2" href="index.html">
+        <span class="bg-primary text-white rounded-3 d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;">L</span>
         <span>Lumen</span>
       </a>
-      <p class="l-footer-copy">© 2025 Lumen Chat. All rights reserved.</p>
+      <p class="text-secondary mb-0">© 2026 Lumen Chat. All rights reserved.</p>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
